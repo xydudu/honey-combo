@@ -5,24 +5,18 @@
   youapi/project/version/?file1.js&file2.js&file3.js
 
   TODO
-    * header
-    * cache
     * css combo
 
 ###
-
-sys = require 'sys'
-url = require 'url'
 path = require 'path'
 express = require 'express'
+gzip = require 'gzip'
 x = require './unity'
 keygrip = require 'keygrip'
 app = express.createServer()
 
 app.use express.bodyParser()
 app.enable 'view cache'
-
-cacheFiles = {}
 
 app.get '/:project/:version', ( req, res ) ->
     
@@ -35,20 +29,27 @@ app.get '/:project/:version', ( req, res ) ->
         res.send( '/** sorry , 404  **/' )
         return
         
-    content = '/*OK*/'
-    console.log req.header('If-None-Match')
+    content = '/* OK, Honey combo handler is working! */'
     if req.header('If-None-Match') is cacheKey
         res.writeHead 304, 'Content-Type': 'application/x-javascript'
         res.end()
     else
-        x.readFiles files, ( $content )->
-            for filename in files
-                content += $content[ filename ]
-
-            x.sendWithHead.call res, content, cacheKey
-
+        temp = "#{ __dirname }/temp/#{ project }/#{ version }/#{ cacheKey }"
+        if path.existsSync( temp )
+            x.getTemp temp, (  $content )->
+                gzip $content, ( $err, $data )->
+                    if not $err
+                        x.sendWithHead.call res, $data, cacheKey
+        else
+            x.readFiles files, ( $content )->
+                for filename in files
+                    content += $content[ filename ]
+                
+                #x.sendWithHead.call res, content, cacheKey
+                gzip content, ( $err, $data )->
+                    if not $err
+                        x.saveToTemp [ project, version, cacheKey ], content
+                        x.sendWithHead.call res, $data, cacheKey
 
 app.listen '8888'
-
-
 
