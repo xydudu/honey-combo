@@ -12,7 +12,7 @@ pro = require( 'uglify-js' ).uglify
 wrench = require 'wrench'
 
 
-projectPaths = 
+projectPaths =
     tazai: 'http://js.tazai.com/honey-2.0/'
     honey: 'http://honey.local/'
     test: 'http://honey.local/'

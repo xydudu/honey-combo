@@ -18,7 +18,8 @@ app = express.createServer()
 app.use express.bodyParser()
 app.enable 'view cache'
 
-app.get '/:project/:version', ( req, res ) ->
+
+app.get '/combo/:project/:version', ( req, res )->
     
     [ project, version ] = [ req.params.project, req.params.version ]
 
@@ -50,6 +51,9 @@ app.get '/:project/:version', ( req, res ) ->
                     if not $err
                         x.saveToTemp [ project, version, cacheKey ], content
                         x.sendWithHead.call res, $data, cacheKey
+
+app.get '/combo', ( req, res )->
+    res.send '<title>Combo Handler - Honey Lab</title>合并javascript文件，来自 @Hunantv.com'
 
 app.listen '8888'
 
