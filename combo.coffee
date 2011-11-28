@@ -24,7 +24,7 @@ app.get '/combo/:project/:version', ( req, res )->
     [ project, version ] = [ req.params.project, req.params.version ]
 
     files = x.getFiles req.query, project
-    cacheKey = keygrip( files ).sign version + project
+    cacheKey = keygrip( files ).sign version + project + files.join('')
 
     if !files
         res.send( '/** sorry , 404  **/' )
