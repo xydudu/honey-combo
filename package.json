@@ -1,5 +1,5 @@
 {
-    "name": "honey combo handler",
+    "name": "honey-combo-handler",
         "version": "1.0.0",
         "dependencies": {
             "express": "",
