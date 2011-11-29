@@ -6,6 +6,7 @@
             "express": "",
             "request": "",
             "uglify-js": "",
+            "gzip": "",
             "wrench": ""
         }
 } 
