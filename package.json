@@ -1,0 +1,11 @@
+{
+    "name": "honey combo handler",
+        "version": "1.0.0",
+        "dependencies": {
+            "express": "",
+            "express": "",
+            "request": "",
+            "uglify-js": "",
+            "wrench": ""
+        }
+} 
