@@ -7,12 +7,16 @@
   TODO
     * css combo
 
+    * 12.7/2011 deal with cluster
+
 ###
 path = require 'path'
 express = require 'express'
 gzip = require 'gzip'
 x = require './unity'
 keygrip = require 'keygrip'
+cluster = require 'cluster'
+numCPUs = require('os').cpus().length
 app = express.createServer()
 
 app.use express.bodyParser()
@@ -53,7 +57,19 @@ app.get '/combo/:project/:version', ( req, res )->
                         x.sendWithHead.call res, $data, cacheKey
 
 app.get '/combo', ( req, res )->
+
     res.send '<title>Combo Handler - Honey Lab</title>合并javascript文件，来自 @Hunantv.com'
 
-app.listen '8888'
+if cluster.isMaster
+
+    cluster.fork() for n in [ numCPUs .. 1 ]
+    cluster.on 'death', ( worker )->
+        cluster.fork()
+        console.log "worker #{ worker.pid } died"
+        ###
+        TODO over 10 times death, must email the exception
+        ###
+
+else
+    app.listen '8888'
 
